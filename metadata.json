@@ -1,0 +1,5 @@
+{
+  "name": "SecureImage Web App",
+  "description": "A modern, secure, and visually stunning platform for encrypting and decrypting files hidden inside images using AES encryption and LSB steganography, all performed client-side.",
+  "requestFramePermissions": []
+}
