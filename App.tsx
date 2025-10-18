@@ -45,10 +45,10 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen w-full gradient-bg-animated text-slate-200 transition-colors duration-500">
-      <div className="relative container mx-auto px-4 py-12 md:py-20">
+      <div className="relative container mx-auto px-4 py-8 sm:py-12 md:py-20">
         <header className="flex justify-between items-start mb-12">
           <div className="text-left">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold gradient-text tracking-tight">
+            <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold gradient-text tracking-tight">
               SecureImage
             </h1>
             <p className="text-slate-300 mt-2 text-lg">
@@ -57,7 +57,7 @@ const App: React.FC = () => {
           </div>
         </header>
 
-        <main className="space-y-16 md:space-y-20">
+        <main className="space-y-12 sm:space-y-16 md:space-y-20">
           <Card className="max-w-3xl mx-auto">
             <div className="p-4 md:p-6">
               <Toggle
@@ -68,7 +68,7 @@ const App: React.FC = () => {
                 onChange={(value) => setMode(value as Mode)}
               />
             </div>
-            <div className="p-6 md:p-8 border-t border-white/10">
+            <div className="p-4 sm:p-6 md:p-8 border-t border-white/10">
               {mode === 'encrypt' ? <EncryptView /> : <DecryptView />}
             </div>
           </Card>
@@ -76,7 +76,7 @@ const App: React.FC = () => {
           <HowItWorks />
         </main>
         
-        <footer className="text-center mt-20">
+        <footer className="text-center mt-16 sm:mt-20">
             <p className="text-sm text-slate-400/70">
                 All encryption and steganography operations are performed locally in your browser.
                 <br />

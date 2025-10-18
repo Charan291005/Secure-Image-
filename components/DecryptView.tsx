@@ -139,7 +139,7 @@ export const DecryptView: React.FC = () => {
                 <p className="font-semibold text-slate-700 dark:text-slate-100 truncate">{decryptedFile.name}</p>
                 <p className="text-sm text-slate-500 dark:text-slate-400">{(decryptedFile.blob.size / 1024).toFixed(2)} KB</p>
             </div>
-            <div className="flex justify-center gap-4">
+            <div className="grid grid-cols-1 sm:flex sm:justify-center gap-3 sm:gap-4">
                 <Button
                 onClick={() => {
                     const a = document.createElement('a');

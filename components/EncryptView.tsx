@@ -199,7 +199,7 @@ export const EncryptView: React.FC = () => {
                 Download the image and use it to decrypt your file later.
             </p>
           <img src={stegoImageUrl} alt="Steganography Result" className="max-w-xs mx-auto rounded-md shadow-lg border border-black/10 dark:border-white/10 mb-6" />
-          <div className="flex justify-center gap-4 flex-wrap">
+          <div className="grid grid-cols-1 sm:flex sm:justify-center sm:flex-wrap gap-3 sm:gap-4">
             <Button
               onClick={() => {
                 const a = document.createElement('a');
