@@ -5,7 +5,7 @@ import { Button } from './ui/Button';
 import { ProgressBar } from './ui/ProgressBar';
 import { decryptFile } from '../services/cryptoService';
 import { extractDataFromImage } from '../services/steganographyService';
-import { CheckCircleIcon, AlertTriangleIcon, DownloadIcon, FileIcon } from './ui/Icons';
+import { CheckCircleIcon, AlertTriangleIcon, DownloadIcon, FileIcon, EyeIcon, EyeOffIcon } from './ui/Icons';
 import { getFileType } from '../utils/fileUtils';
 
 type Status = 'idle' | 'extracting' | 'decrypting' | 'success' | 'error';
@@ -25,6 +25,7 @@ interface DecryptedFile {
 export const DecryptView: React.FC = () => {
   const [stegoImage, setStegoImage] = useState<File | null>(null);
   const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [decryptedFile, setDecryptedFile] = useState<DecryptedFile | null>(null);
   const [processState, setProcessState] = useState<ProcessState>({
     status: 'idle',
@@ -107,12 +108,22 @@ export const DecryptView: React.FC = () => {
       
       <Input
         id="password-decrypt"
-        type="password"
+        type={isPasswordVisible ? 'text' : 'password'}
         label="2. Enter Decryption Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         placeholder="Enter the password used for encryption"
         disabled={isProcessing}
+        endAdornment={
+          <button
+            type="button"
+            onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+            className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded"
+            aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+          >
+            {isPasswordVisible ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+          </button>
+        }
       />
 
       {processState.status !== 'idle' && processState.status !== 'success' && (

@@ -27,8 +27,8 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
       document.body.style.overflow = 'hidden';
       window.addEventListener('keydown', handleEsc);
       
-      // Focus the modal or the first focusable element inside it
-      setTimeout(() => modalRef.current?.focus(), 0);
+      // Focus the modal container itself for screen reader context
+      setTimeout(() => modalRef.current?.focus(), 50);
 
       return () => {
         document.body.style.overflow = originalStyle;
@@ -41,11 +41,13 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
 
   // Focus trapping logic
   useEffect(() => {
+    if (!isOpen) return;
+
     const handleFocusTrap = (event: KeyboardEvent) => {
         if (event.key !== 'Tab' || !modalRef.current) return;
 
         const focusableElements = modalRef.current.querySelectorAll<HTMLElement>(
-            'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            'a[href]:not([disabled]), button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'
         );
         
         if (focusableElements.length === 0) return;
@@ -53,12 +55,12 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
         const firstElement = focusableElements[0];
         const lastElement = focusableElements[focusableElements.length - 1];
 
-        if (event.shiftKey) { // Shift + Tab
+        if (event.shiftKey) { // Shift + Tab (backwards)
             if (document.activeElement === firstElement) {
                 lastElement.focus();
                 event.preventDefault();
             }
-        } else { // Tab
+        } else { // Tab (forwards)
             if (document.activeElement === lastElement) {
                 firstElement.focus();
                 event.preventDefault();
@@ -66,12 +68,10 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
         }
     };
 
-    if (isOpen) {
-        window.addEventListener('keydown', handleFocusTrap);
-        return () => {
-            window.removeEventListener('keydown', handleFocusTrap);
-        };
-    }
+    window.addEventListener('keydown', handleFocusTrap);
+    return () => {
+        window.removeEventListener('keydown', handleFocusTrap);
+    };
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -80,21 +80,21 @@ export const Modal: React.FC<ModalProps> = ({ isOpen, onClose, title, children }
     <div 
         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in"
         onClick={onClose}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
     >
       <div 
         ref={modalRef}
         className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl rounded-2xl shadow-2xl w-full max-w-md border border-black/10 dark:border-white/10 flex flex-col max-h-[calc(100vh-2rem)]"
         onClick={e => e.stopPropagation()}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="modal-title"
         tabIndex={-1} // Make the modal container focusable
       >
         <header className="flex-shrink-0 flex items-center justify-between p-4 border-b border-black/10 dark:border-white/10">
           <h2 id="modal-title" className="text-xl font-bold text-slate-800 dark:text-white">{title}</h2>
           <button 
             onClick={onClose} 
-            className="p-1 rounded-full text-slate-500 hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+            className="p-1 rounded-full text-slate-500 hover:bg-black/10 dark:hover:bg-white/10 transition-colors focus:outline-none focus:ring-2 focus:ring-sky-500"
             aria-label="Close dialog"
           >
             <XIcon className="w-6 h-6" />

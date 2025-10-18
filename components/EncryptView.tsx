@@ -7,7 +7,7 @@ import { PasswordStrengthMeter } from './ui/PasswordStrengthMeter';
 import { usePasswordStrength } from '../hooks/usePasswordStrength';
 import { encryptFile } from '../services/cryptoService';
 import { embedDataInImage, calculateCapacity } from '../services/steganographyService';
-import { CheckCircleIcon, AlertTriangleIcon, DownloadIcon, ShieldCheckIcon, ShareIcon } from './ui/Icons';
+import { CheckCircleIcon, AlertTriangleIcon, DownloadIcon, ShieldCheckIcon, ShareIcon, EyeIcon, EyeOffIcon } from './ui/Icons';
 import { ShareModal } from './ShareModal';
 
 type Status = 'idle' | 'encrypting' | 'embedding' | 'success' | 'error';
@@ -22,6 +22,7 @@ export const EncryptView: React.FC = () => {
   const [payloadFile, setPayloadFile] = useState<File | null>(null);
   const [coverImage, setCoverImage] = useState<File | null>(null);
   const [password, setPassword] = useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [stegoImageUrl, setStegoImageUrl] = useState<string | null>(null);
   const [isShareModalOpen, setShareModalOpen] = useState(false);
   const [processState, setProcessState] = useState<ProcessState>({
@@ -165,12 +166,22 @@ export const EncryptView: React.FC = () => {
       <div>
         <Input
           id="password-encrypt"
-          type="password"
+          type={isPasswordVisible ? 'text' : 'password'}
           label="3. Set Encryption Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter a strong password"
           disabled={isProcessing}
+          endAdornment={
+            <button
+              type="button"
+              onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+              className="text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 focus:outline-none focus:ring-2 focus:ring-sky-500 rounded"
+              aria-label={isPasswordVisible ? 'Hide password' : 'Show password'}
+            >
+              {isPasswordVisible ? <EyeOffIcon className="w-5 h-5" /> : <EyeIcon className="w-5 h-5" />}
+            </button>
+          }
         />
         {password && <PasswordStrengthMeter strength={passwordStrength} />}
       </div>
